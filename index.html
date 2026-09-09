@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="English Quest 英语口语闯关大冒险 - 卡通闯关式英语口语与词汇练习，手机电脑均可玩">
+<title>English Quest · 英语口语闯关大冒险</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* ============ 基础变量与重置 ============ */
+:root{
+  --bg:#fdf3e3;
+  --bg2:#f7e6c9;
+  --ink:#3b2f2f;
+  --ink-soft:#7a6a63;
+  --card:#ffffff;
+  --green:#58cc4b; --green-d:#3fa036;
+  --blue:#4c9aff; --blue-d:#2f7be0;
+  --orange:#ff9f43; --orange-d:#e8801f;
+  --red:#ff5b5b; --red-d:#d63c3c;
+  --purple:#9b6bff; --purple-d:#7a4ee0;
+  --gold:#ffc93c; --gold-d:#e0a800;
+  --shadow:0 4px 0 rgba(59,47,47,.12);
+  --radius:20px;
+  --font-en:'Fredoka','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--font-en);
+  background:var(--bg);
+  color:var(--ink);
+  overflow-x:hidden;
+  background-image:radial-gradient(circle at 12% 18%,rgba(255,201,60,.18) 0 90px,transparent 91px),
+                   radial-gradient(circle at 88% 12%,rgba(76,154,255,.14) 0 120px,transparent 121px),
+                   radial-gradient(circle at 80% 88%,rgba(88,204,75,.14) 0 110px,transparent 111px);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hidden{display:none!important}
+.app{max-width:760px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:30px}
+
+/* ============ 顶部状态栏 ============ */
+.topbar{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;
+  background:rgba(253,243,227,.92);backdrop-filter:blur(6px);
+}
+.tb-btn{
+  width:42px;height:42px;border-radius:14px;background:#fff;
+  box-shadow:0 3px 0 rgba(59,47,47,.14);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  transition:transform .08s;
+}
+.tb-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(59,47,47,.14)}
+.tb-stats{display:flex;gap:8px;margin-left:auto;align-items:center}
+.chip{
+  display:flex;align-items:center;gap:5px;background:#fff;border-radius:999px;
+  padding:7px 13px;font-weight:600;font-size:15px;box-shadow:0 3px 0 rgba(59,47,47,.10)
+}
+.chip .ic{font-size:16px}
+.chip.hearts{color:var(--red)}
+.chip.xp{color:var(--blue-d)}
+.chip.streak{color:var(--orange-d)}
+
+/* ============ 通用按钮（卡通3D） ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:16px;padding:14px 26px;font-size:17px;font-weight:700;
+  background:var(--green);color:#fff;box-shadow:0 5px 0 var(--green-d);
+  transition:transform .08s,box-shadow .08s;letter-spacing:.3px;
+  text-align:center;width:100%;
+}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--green-d)}
+.btn.blue{background:var(--blue);box-shadow:0 5px 0 var(--blue-d)}
+.btn.blue:active{box-shadow:0 1px 0 var(--blue-d)}
+.btn.orange{background:var(--orange);box-shadow:0 5px 0 var(--orange-d)}
+.btn.orange:active{box-shadow:0 1px 0 var(--orange-d)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 5px 0 #e3d5c1}
+.btn.ghost:active{box-shadow:0 1px 0 #e3d5c1}
+.btn.purple{background:var(--purple);box-shadow:0 5px 0 var(--purple-d)}
+.btn.purple:active{box-shadow:0 1px 0 var(--purple-d)}
+.btn:disabled{background:#cfc4bb;box-shadow:0 5px 0 #b3a89f;cursor:not-allowed}
+.btn.small{width:auto;padding:9px 18px;font-size:15px;border-radius:13px}
+
+/* ============ 首页 ============ */
+.screen{padding:8px 18px;animation:screenIn .35s ease}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hero{text-align:center;padding:26px 10px 18px}
+.hero-logo{font-size:64px;line-height:1;animation:floaty 3s ease-in-out infinite;display:inline-block}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.hero h1{font-size:34px;font-weight:700;margin-top:10px;letter-spacing:1px}
+.hero h1 .eq{color:var(--green-d)}
+.hero p{color:var(--ink-soft);margin-top:8px;font-size:15.5px;line-height:1.7}
+.hero-actions{max-width:380px;margin:22px auto 0;display:flex;flex-direction:column;gap:13px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+.feat{
+  background:var(--card);border-radius:18px;padding:16px 14px;text-align:center;
+  box-shadow:var(--shadow);
+}
+.feat .fi{font-size:30px}
+.feat b{display:block;margin:7px 0 3px;font-size:15.5px}
+.feat span{font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+
+/* ============ 世界地图 ============ */
+.map-head{padding:6px 4px 14px}
+.map-head h2{font-size:24px}
+.map-head p{color:var(--ink-soft);font-size:14px;margin-top:4px}
+.world{
+  background:var(--card);border-radius:22px;margin-bottom:16px;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.world-banner{
+  display:flex;align-items:center;gap:13px;padding:15px 17px;color:#fff;position:relative;
+}
+.world-banner .wi{
+  width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;font-size:28px;flex:none;
+}
+.world-banner h3{font-size:18px;font-weight:700}
+.world-banner .wzh{font-size:12.5px;opacity:.9;margin-top:2px}
+.world-progress{margin-left:auto;text-align:right;font-size:12.5px;font-weight:600;line-height:1.5}
+.world-progress .bar{width:84px;height:9px;background:rgba(255,255,255,.3);border-radius:99px;margin-top:5px;overflow:hidden}
+.world-progress .bar i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .5s}
+.mission-path{display:flex;align-items:center;gap:9px;padding:14px 16px;overflow-x:auto}
+.mission-node{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px;width:78px}
+.node-circle{
+  width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:26px;background:#f1e7d6;position:relative;transition:transform .12s;
+  border:3px solid #e4d6c0;
+}
+.mission-node.done .node-circle{background:#e4f8e1;border-color:var(--green)}
+.mission-node.current .node-circle{background:#e8f1ff;border-color:var(--blue);animation:pulse 1.6s infinite}
+.mission-node.locked .node-circle{opacity:.5;filter:grayscale(.7)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(76,154,255,.45)}50%{box-shadow:0 0 0 9px rgba(76,154,255,0)}}
+.mission-node:not(.locked) .node-circle:active{transform:scale(.92)}
+.node-stars{font-size:11px;color:var(--gold-d);letter-spacing:1px;height:14px}
+.node-label{font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.25;min-height:28px}
+.path-line{flex:none;width:16px;height:4px;border-radius:4px;background:#e4d6c0;margin-bottom:26px}
+.path-line.done{background:var(--green)}
+
+/* ============ 关卡简报 ============ */
+.brief-card{background:var(--card);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;margin-top:8px}
+.brief-top{padding:24px 20px;text-align:center;color:#fff}
+.brief-top .bi{font-size:56px}
+.brief-top h2{font-size:23px;margin-top:8px}
+.brief-top .bzh{font-size:13.5px;opacity:.92;margin-top:4px}
+.brief-body{padding:18px 20px 22px}
+.brief-sec{margin-bottom:16px}
+.brief-sec h4{font-size:13.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.brief-sec p{font-size:15px;line-height:1.7}
+.goal-box{background:#fff6e0;border:2px dashed var(--orange);border-radius:14px;padding:12px 14px;font-size:14.5px;line-height:1.6}
+.vocab-preview{display:flex;flex-wrap:wrap;gap:8px}
+.vocab-chip{
+  background:#eef5ff;border:1.5px solid #cfe2ff;border-radius:12px;padding:7px 11px;font-size:13.5px;
+  display:inline-flex;align-items:center;gap:6px
+}
+.vocab-chip b{color:var(--blue-d)}
+.vocab-chip .zh{color:var(--ink-soft)}
+.vocab-chip .spk{font-size:13px;cursor:pointer}
+.brief-actions{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+
+/* ============ 对话界面 ============ */
+.dlg-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dlg-progress{flex:1;height:12px;background:#fff;border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.08)}
+.dlg-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#8be37f);border-radius:99px;transition:width .4s}
+.dlg-stage{
+  background:var(--card);border-radius:22px;box-shadow:var(--shadow);
+  padding:18px 16px;min-height:300px;display:flex;flex-direction:column
+}
+.npc-row{display:flex;gap:11px;align-items:flex-end;margin-bottom:14px}
+.npc-avatar{
+  width:58px;height:58px;border-radius:50%;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+  background:var(--bg2);border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.12)
+}
+.bubble{
+  background:#f3ede2;border-radius:6px 18px 18px 18px;padding:13px 15px;max-width:78%;
+  animation:popIn .3s ease;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.85) translateY(8px)}to{opacity:1;transform:none}}
+.bubble .en{font-size:16.5px;line-height:1.55;font-weight:500}
+.bubble .zh{font-size:12.8px;color:var(--ink-soft);margin-top:5px;line-height:1.5}
+.bubble .speak{margin-top:7px;font-size:12.5px;color:var(--blue-d);display:inline-flex;gap:4px;align-items:center;font-weight:600}
+.me-row{display:flex;justify-content:flex-end;margin:8px 0 14px}
+.me-bubble{background:var(--blue);color:#fff;border-radius:18px 6px 18px 18px;padding:11px 15px;max-width:78%;animation:popIn .3s}
+.me-bubble .en{font-size:15.5px;line-height:1.5}
+.me-bubble .zh{font-size:12.3px;opacity:.85;margin-top:4px}
+.options{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:14px}
+.opt{
+  text-align:left;background:#fff;border:2.5px solid #e7dccb;border-radius:16px;
+  padding:13px 15px;font-size:15px;line-height:1.5;transition:transform .08s,border-color .15s,background .15s;
+  box-shadow:0 3px 0 #e7dccb;
+}
+.opt:active{transform:translateY(2px)}
+.opt .o-en{font-weight:600;display:block}
+.opt .o-zh{font-size:12.8px;color:var(--ink-soft);margin-top:3px}
+.opt.correct{border-color:var(--green);background:#eafae7;box-shadow:0 3px 0 var(--green-d)}
+.opt.wrong{border-color:var(--red);background:#ffecec;box-shadow:0 3px 0 var(--red-d);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.opt:disabled{cursor:default;opacity:.85}
+.voice-row{display:flex;gap:10px;margin-top:12px}
+.mic-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:15px;padding:12px;font-weight:700;font-size:15px;
+  background:#fff;border:2.5px solid var(--blue);color:var(--blue-d);box-shadow:0 3px 0 #cfe2ff
+}
+.mic-btn.listening{background:var(--red);border-color:var(--red);color:#fff;animation:micpulse 1s infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,91,91,.4)}50%{box-shadow:0 0 0 10px rgba(255,91,91,0)}}
+.hint-tip{font-size:13px;color:var(--orange-d);background:#fff6e0;border-radius:11px;padding:9px 12px;margin-top:10px;line-height:1.5;animation:popIn .3s}
+
+/* ============ 词汇 BOSS 关 ============ */
+.vocab-stage{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:20px 16px}
+.boss-head{display:flex;align-items:center;gap:12px;color:#fff;background:linear-gradient(135deg,var(--purple),#b794ff);border-radius:16px;padding:14px 16px;margin-bottom:16px}
+.boss-head .bi{font-size:38px}
+.boss-head b{font-size:16.5px}
+.boss-head span{font-size:12.5px;opacity:.92;display:block;margin-top:2px}
+.q-progress{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:10px}
+.q-prompt{
+  text-align:center;background:#f7f1e6;border-radius:16px;padding:20px 14px;margin-bottom:14px
+}
+.q-prompt .qword{font-size:30px;font-weight:700;letter-spacing:.5px}
+.q-prompt .qzh{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.q-prompt .listen-big{
+  margin:10px auto 0;width:58px;height:58px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--blue-d)
+}
+.q-prompt .sentence{font-size:17.5px;line-height:1.7;font-weight:500}
+.q-prompt .sentence .blank{color:var(--purple-d);font-weight:700;border-bottom:3px solid var(--purple);padding:0 10px}
+.v-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.v-opt{
+  background:#fff;border:2.5px solid #e7dccb;border-radius:14px;padding:14px 10px;
+  font-size:15px;font-weight:600;text-align:center;box-shadow:0 3px 0 #e7dccb;transition:transform .08s
+}
+.v-opt:active{transform:translateY(2px)}
+.v-opt.correct{border-color:var(--green);background:#eafae7;box-shadow:0 3px 0 var(--green-d)}
+.v-opt.wrong{border-color:var(--red);background:#ffecec;box-shadow:0 3px 0 var(--red-d)}
+
+/* ============ 结算页 ============ */
+.result-card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:30px 22px;text-align:center;margin-top:14px}
+.result-emoji{font-size:66px;animation:bounceIn .6s}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.result-card h2{font-size:26px;margin:8px 0 4px}
+.result-stars{font-size:40px;letter-spacing:6px;margin:12px 0;color:var(--gold)}
+.result-stars .off{color:#e0d6c6}
+.result-xp{display:inline-flex;gap:8px;background:#eef5ff;color:var(--blue-d);font-weight:700;border-radius:999px;padding:9px 20px;font-size:16px;margin:6px 0 4px}
+.learned-list{text-align:left;margin:16px 0 4px}
+.learned-list h4{font-size:13px;color:var(--ink-soft);margin-bottom:9px;letter-spacing:1px}
+.learned-item{display:flex;align-items:center;gap:9px;background:#faf5ec;border-radius:12px;padding:9px 12px;margin-bottom:7px;font-size:14px}
+.learned-item .spk{color:var(--blue-d);cursor:pointer}
+.learned-item b{font-weight:700}
+.learned-item .zh{color:var(--ink-soft);margin-left:auto;font-size:13px}
+.result-actions{display:flex;flex-direction:column;gap:11px;margin-top:18px}
+
+/* ============ 个人中心 ============ */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:14px 0}
+.stat-box{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:15px 8px;text-align:center}
+.stat-box .n{font-size:25px;font-weight:700;color:var(--blue-d)}
+.stat-box .l{font-size:12px;color:var(--ink-soft);margin-top:3px}
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:12px}
+.badge{background:#fff;border-radius:16px;padding:15px 8px;text-align:center;box-shadow:var(--shadow)}
+.badge .bi{font-size:30px;filter:grayscale(1);opacity:.4}
+.badge.got .bi{filter:none;opacity:1}
+.badge b{display:block;font-size:12.5px;margin-top:6px}
+.badge span{font-size:11px;color:var(--ink-soft);display:block;margin-top:2px;line-height:1.4}
+.danger-zone{margin-top:22px}
+
+/* ============ Toast / 飘字 ============ */
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:14.5px;
+  z-index:99;transition:transform .3s;max-width:88%;text-align:center;line-height:1.5
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.float-xp{position:fixed;font-weight:700;color:var(--blue-d);font-size:20px;z-index:98;pointer-events:none;animation:floatUp 1s ease forwards}
+@keyframes floatUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-46px)}}
+.confetti{position:fixed;top:-12px;z-index:97;font-size:20px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+
+/* ============ 响应式 ============ */
+@media (min-width:640px){
+  .hero h1{font-size:42px}
+  .feat-grid{grid-template-columns:repeat(4,1fr)}
+  .options{display:grid;grid-template-columns:1fr 1fr}
+  .options .opt:last-child{grid-column:1/-1}
+  .v-opts{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:380px){
+  .hero h1{font-size:28px}
+  .chip{padding:6px 10px;font-size:13.5px}
+  .node-circle{width:52px;height:52px;font-size:23px}
+  .mission-node{width:68px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ===== 顶部状态栏 ===== -->
+  <div class="topbar" id="topbar">
+    <button class="tb-btn" id="btnBack" title="返回" onclick="App.back()">‹</button>
+    <div class="tb-stats">
+      <div class="chip hearts"><span class="ic">❤</span><span id="tbHearts">5</span></div>
+      <div class="chip xp"><span class="ic">⭐</span><span id="tbXp">0</span></div>
+      <div class="chip streak"><span class="ic">🔥</span><span id="tbStreak">0</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 首页 ===== -->
+  <section class="screen" id="screen-home">
+    <div class="hero">
+      <span class="hero-logo">🗺️</span>
+      <h1>English <span class="eq">Quest</span></h1>
+      <p>英语口语闯关大冒险<br>和卡通角色实景对话，闯关打怪攒星星，口语词汇一起练</p>
+      <div class="hero-actions">
+        <button class="btn" onclick="App.go('map')">▶ 开始冒险</button>
+        <button class="btn ghost" onclick="App.go('profile')">🏅 我的成就</button>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="fi">💬</div><b>实景对话</b><span>6 大主题世界，真实生活场景多轮对话</span></div>
+      <div class="feat"><div class="fi">🎤</div><b>语音开口说</b><span>浏览器语音识别+朗读，听说一起练</span></div>
+      <div class="feat"><div class="fi">👾</div><b>BOSS 词汇战</b><span>听音选词、句子填空，闯关击败 BOSS</span></div>
+      <div class="feat"><div class="fi">📈</div><b>成长体系</b><span>XP 等级、三星评价、连续打卡自动存档</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 世界地图 ===== -->
+  <section class="screen hidden" id="screen-map">
+    <div class="map-head">
+      <h2>冒险地图</h2>
+      <p>完成前一关即可解锁后续关卡，每关都可冲刺三星</p>
+    </div>
+    <div id="worldList"></div>
+  </section>
+
+  <!-- ===== 关卡简报 ===== -->
+  <section class="screen hidden" id="screen-brief"></section>
+
+  <!-- ===== 对话关卡 ===== -->
+  <section class="screen hidden" id="screen-dialogue">
+    <div class="dlg-head">
+      <div class="dlg-progress"><i id="dlgBar" style="width:0%"></i></div>
+    </div>
+    <div class="dlg-stage" id="dlgStage"></div>
+  </section>
+
+  <!-- ===== 词汇 BOSS 关 ===== -->
+  <section class="screen hidden" id="screen-vocab">
+    <div class="dlg-head">
+      <div class="dlg-progress"><i id="vocabBar" style="width:0%"></i></div>
+    </div>
+    <div class="vocab-stage" id="vocabStage"></div>
+  </section>
+
+  <!-- ===== 结算 ===== -->
+  <section class="screen hidden" id="screen-result"></section>
+
+  <!-- ===== 个人中心 ===== -->
+  <section class="screen hidden" id="screen-profile"></section>
+
+</div>
+<div class="toast" id="toast"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
